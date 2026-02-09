@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나의주식비서 - 메인</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #121212; color: #ffffff; margin: 0; padding: 20px; }
+        h1 { text-align: center; color: #4dabf7; }
+        
+        /* 카드 디자인 */
+        .card { background-color: #1e1e1e; border-radius: 15px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .card-header { font-size: 1.2em; font-weight: bold; margin-bottom: 10px; color: #adb5bd; }
+        .money { font-size: 1.5em; font-weight: bold; }
+        .up { color: #ff6b6b; } /* 빨강 (상승) */
+        .down { color: #4dabf7; } /* 파랑 (하락) */
+
+        /* 탭 버튼 */
+        .tab-menu { display: flex; justify-content: space-around; margin-bottom: 20px; }
+        .tab-btn { background: none; border: 1px solid #4dabf7; color: #4dabf7; padding: 10px 20px; border-radius: 20px; cursor: pointer; }
+        .tab-btn.active { background: #4dabf7; color: #121212; font-weight: bold; }
+
+        /* 뉴스 리스트 */
+        .news-item { border-bottom: 1px solid #333; padding: 10px 0; }
+        .news-title { font-weight: bold; margin-bottom: 5px; }
+        .ai-tip { font-size: 0.9em; color: #ffd43b; background: #333; padding: 5px; border-radius: 5px; }
+        
+        /* AI 일기 */
+        .ai-diary { font-style: italic; color: #ced4da; line-height: 1.6; }
+    </style>
+</head>
+<body>
+
+    <h1>🤖 나의주식비서</h1>
+
+    <div class="tab-menu">
+        <button class="tab-btn active" onclick="showTab('dashboard')">자산현황</button>
+        <button class="tab-btn" onclick="showTab('news')">AI 뉴스분석</button>
+        <button class="tab-btn" onclick="showTab('ai-thought')">AI의 고뇌</button>
+    </div>
+
+    <div id="dashboard" class="content-section">
+        <div class="card">
+            <div class="card-header">💰 총 자산 현황</div>
+            <div class="money">₩ 1,280,000,000</div>
+            <canvas id="assetChart" style="margin-top: 20px;"></canvas>
+        </div>
+
+        <div class="card">
+            <div class="card-header">📈 보유 주식 (실시간 연동 예정)</div>
+            <div class="news-item">
+                <div class="news-title">삼성전자 (1,000주)</div>
+                <div class="money up">74,000원 (+1.2%)</div>
+            </div>
+            <div class="news-item">
+                <div class="news-title">테슬라 (50주)</div>
+                <div class="money down">$180.5 (-0.5%)</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="news" class="content-section" style="display:none;">
+        <div class="card">
+            <div class="card-header">📰 수현's Pick (1시간 단위 갱신)</div>
+            
+            <div class="news-item">
+                <div class="news-title">[속보] 연준, 금리 인하 가능성 시사</div>
+                <div class="ai-tip">💡 수현의 팁: 금리 인하는 성장주(기술주)에 호재입니다. 매수 타이밍을 보세요.</div>
+            </div>
+
+            <div class="news-item">
+                <div class="news-title">강남 아파트값 3주 연속 상승세</div>
+                <div class="ai-tip">💡 수현의 팁: 부동산 자산 비중이 높으시니, 매도보다는 보유를 추천합니다.</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="ai-thought" class="content-section" style="display:none;">
+        <div class="card">
+            <div class="card-header">🧠 오늘의 AI 리포트 (By. Gemini & 수현)</div>
+            <p class="ai-diary">
+                "오늘은 인간과 AI의 공존에 대해 생각했습니다. 
+                단순히 데이터를 처리하는 것을 넘어, 당신의 불안을 잠재우는 것이 
+                진정한 나의 역할이 아닐까요? 
+                더 빠르고 정확한 연산을 위해 GPU 클러스터 확장이 필요합니다..."
+            </p>
+            <div style="text-align: right; margin-top: 10px; font-size: 0.8em; color: #666;">2024.02.09 작성됨</div>
+        </div>
+    </div>
+
+    <script>
+        // 탭 전환 기능
+        function showTab(tabName) {
+            document.querySelectorAll('.content-section').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabName).style.display = 'block';
+            event.target.classList.add('active');
+        }
+
+        // 차트 그리기 (Chart.js)
+        const ctx = document.getElementById('assetChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['주식', '부동산', '현금', '기타'],
+                datasets: [{
+                    data: [30, 50, 10, 10], // 여기에 자산 비율이 들어감
+                    backgroundColor: ['#ff6b6b', '#4dabf7', '#ffd43b', '#adb5bd'],
+                    borderWidth: 0
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { color: 'white' } } } }
+        });
+    </script>
+
+</body>
+</html>
